@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
+import Database
 
 
 #Criar janela#
@@ -38,8 +39,20 @@ PasswordLabel.place(x=30,y=125)
 PassEntry = ttk.Entry(RightFrame, width=30, show="¿")
 PassEntry.place(x=180, y=137)
 
+def Login():
+    user = UserEntry.get()
+    password = PassEntry.get()
+   
+    VerifyLogin = Database.VerifyLogin(user,password)
+    try:
+        if user in VerifyLogin and password in VerifyLogin:
+            messagebox.showinfo(title="Login Info", message="Confirmed Access, Wellcome")
+    except:
+        messagebox.showwarning(title="Login Info", message="Verify if you are registered in the system")
+
+
 #======================Botoes======================#
-LoginButton = ttk.Button(RightFrame, text="Login", width="22")
+LoginButton = ttk.Button(RightFrame, text="Login", width="22", command=Login)
 LoginButton.place(x=34.2 , y=200)
 
 def Register():
@@ -60,7 +73,25 @@ def Register():
     EmailEntry = ttk.Entry(RightFrame,width=30)
     EmailEntry.place(x=180,y=57)
 
-    Register = ttk.Button(RightFrame, text="Register", width="22")
+    def RegisterToDataBase():
+        Database.CreateTable()
+
+        name = NomeEntry.get()
+        email = EmailEntry.get()
+        user = UserEntry.get()
+        password = PassEntry.get()
+
+        if name == '' or email == '' or user == '' or password == '':
+             messagebox.showerror(title="Register Info", message="Some field is empty. Please fill it")
+        else:
+            Database.ExecuteQuery("""insert into Users (Name, Email, User, Password)
+             values('"""+name+"','"+email+"','"+user+"','"+password+"')")
+            
+            messagebox.showinfo(title="Register Info", message="Register Sucessful")
+        
+        
+
+    Register = ttk.Button(RightFrame, text="Register", width="22", command=RegisterToDataBase)
     Register.place(x=223,y=199)
 
     def BackToLogin():
@@ -83,12 +114,8 @@ def Register():
     Back = ttk.Button(RightFrame, text="Back", width="22", command=BackToLogin)
     Back.place(x=34.2 , y=200)
     
-
-
 RegisterButton = ttk.Button(RightFrame, text="Register", width="22", command=Register)
 RegisterButton.place(x=223,y=199)
-
-
 
 jan.mainloop()
  
