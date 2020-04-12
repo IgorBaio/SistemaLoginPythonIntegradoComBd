@@ -40,12 +40,12 @@ PassEntry = ttk.Entry(RightFrame, width=30, show="¿")
 PassEntry.place(x=180, y=137)
 
 def Login():
-    user = UserEntry.get()
+    user = str(UserEntry.get())
     password = PassEntry.get()
    
     VerifyLogin = Database.VerifyLogin(user,password)
     try:
-        if user in VerifyLogin and password in VerifyLogin:
+        if user in VerifyLogin and password in str(VerifyLogin):
             messagebox.showinfo(title="Login Info", message="Confirmed Access, Wellcome")
     except:
         messagebox.showwarning(title="Login Info", message="Verify if you are registered in the system")
